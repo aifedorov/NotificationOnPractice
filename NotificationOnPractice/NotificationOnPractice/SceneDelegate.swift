@@ -14,7 +14,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
-        window?.rootViewController = PaymentsListViewController()
+
+        let navigationController = UINavigationController(rootViewController: PaymentsListViewController())
+        
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithDefaultBackground()
+        appearance.backgroundColor = .systemBackground
+        
+        navigationController.navigationBar.scrollEdgeAppearance = appearance
+        navigationController.navigationBar.standardAppearance = appearance
+        
+        
+        window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
     }
 }

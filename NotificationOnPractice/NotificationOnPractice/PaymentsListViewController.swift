@@ -82,7 +82,7 @@ final class PaymentsListViewController: UIViewController {
     
     deinit {
         #if useCombineV1 || useCombineV2
-        cancellableSet.removeAll()
+        cancellableSet.forEach { $0.cancel() }
         #else
         if let observer = notificationObserver {
             NotificationCenter.default.removeObserver(observer)

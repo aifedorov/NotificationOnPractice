@@ -27,9 +27,11 @@ final class PaymentsListViewController: UIViewController {
         return tableView
     }()
         
-    #if useCombineV1 || useCombineV2
+    #if useCombineV1
     private var cancellableSet: Set<AnyCancellable> = []
     @Published private var savedPayment: Payment?
+    #elseif useCombineV2
+    private var cancellableSet: Set<AnyCancellable> = []
     #else
     private var notificationObserver: Any?
     private var savedPayment: Payment?
@@ -64,12 +66,7 @@ final class PaymentsListViewController: UIViewController {
             }
             .store(in: &cancellableSet)
         #else
-        notificationObserver = NotificationCenter.default.addObserver(forName: .paymentSaved, object: nil, queue: .main) { [weak self] notification in
-            guard let self else { return }
-            if let savedPayment = notification.userInfo?["savedPayment"] as? Payment {
-                self.savedPayment = savedPayment
-            }
-        }
+        notificationObserver = NotificationCenter.default.addObserver(self, selector: #selector(paymentSaved(_:)), name: .paymentSaved, object: nil)
         #endif
     }
     
@@ -91,6 +88,11 @@ final class PaymentsListViewController: UIViewController {
             NotificationCenter.default.removeObserver(observer)
         }
         #endif
+    }
+    
+    @objc private func paymentSaved(_ notification: Notification) {
+        guard let savedPayment = notification.object as? Payment else { return }
+        self.savedPayment = savedPayment
     }
     
     private func setupView() {

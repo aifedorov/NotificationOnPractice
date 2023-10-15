@@ -13,6 +13,8 @@ extension UIViewController {
         alert.addAction(.init(title: "OK", style: .default, handler: { _ in
             actionHandler()
         }))
-        present(alert, animated: true)
+        DispatchQueue.main.async { [unowned self] in
+            self.present(alert, animated: true)
+        }
     }
 }

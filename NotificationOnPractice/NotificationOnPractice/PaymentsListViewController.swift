@@ -26,16 +26,14 @@ final class PaymentsListViewController: UIViewController {
         tableView.delegate = self
         return tableView
     }()
-    
-    private var notificationObserver: Any?
-    
-    // NotificationCenter version
-    private var savedPayment: Payment?
-    
-    // Combine version
-//    @Published private var savedPayment: Payment?
-    
+        
+    #if useCombineV1 || useCombineV2
     private var cancellableSet: Set<AnyCancellable> = []
+    @Published private var savedPayment: Payment?
+    #else
+    private var notificationObserver: Any?
+    private var savedPayment: Payment?
+    #endif
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,14 +43,16 @@ final class PaymentsListViewController: UIViewController {
         setupTableView()
         updateSnapshot()
         
-        // Combine version
-//        NotificationCenter.default.publisher(for: .paymentSaved, object: nil)
-//            .compactMap { (notification) -> Payment?  in
-//                return notification.object as? Payment
-//            }
-//            .assign(to: \.savedPayment, on: self)
-//            .store(in: &cancellableSet)
+        #if useCombineV1
+        // Combine version with @Published
+        NotificationCenter.default.publisher(for: .paymentSaved, object: nil)
+            .compactMap { (notification) -> Payment?  in
+                return notification.object as? Payment
+            }
+            .assign(to: \.savedPayment, on: self)
+            .store(in: &cancellableSet)
         
+        #elseif useCombineV2
         // Combine version without @Published
         NotificationCenter.default.publisher(for: .paymentSaved, object: nil)
             .compactMap { (notification) -> Payment?  in
@@ -63,14 +63,14 @@ final class PaymentsListViewController: UIViewController {
                 self.savedPayment = payment
             }
             .store(in: &cancellableSet)
-
-        // NotificationCenter version
+        #else
         notificationObserver = NotificationCenter.default.addObserver(forName: .paymentSaved, object: nil, queue: .main) { [weak self] notification in
             guard let self else { return }
             if let savedPayment = notification.userInfo?["savedPayment"] as? Payment {
                 self.savedPayment = savedPayment
             }
         }
+        #endif
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -84,13 +84,13 @@ final class PaymentsListViewController: UIViewController {
     
     
     deinit {
-        // NotificationCenter version
+        #if useCombineV1 || useCombineV2
+        cancellableSet.removeAll()
+        #else
         if let observer = notificationObserver {
             NotificationCenter.default.removeObserver(observer)
         }
-        
-        // Combine version
-        cancellableSet.removeAll()
+        #endif
     }
     
     private func setupView() {

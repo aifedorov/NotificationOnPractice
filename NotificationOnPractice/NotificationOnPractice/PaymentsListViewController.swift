@@ -32,6 +32,7 @@ final class PaymentsListViewController: UIViewController {
     @Published private var savedPayment: Payment?
     #elseif useCombineV2
     private var cancellableSet: Set<AnyCancellable> = []
+    private var savedPayment: Payment?
     #else
     private var notificationObserver: Any?
     private var savedPayment: Payment?
@@ -78,7 +79,6 @@ final class PaymentsListViewController: UIViewController {
             }
         }
     }
-    
     
     deinit {
         #if useCombineV1 || useCombineV2

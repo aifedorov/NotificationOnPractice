@@ -9,6 +9,8 @@ import UIKit
 
 final class PaymentReceiptViewController: UIViewController {
     
+    var payment: Payment?
+    
     private lazy var saveButton: UIButton = {
         let button = UIButton(configuration: .borderedProminent())
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -28,5 +30,16 @@ final class PaymentReceiptViewController: UIViewController {
             saveButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             saveButton.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
+        
+        saveButton.addTarget(self, action: #selector(didTapSaveButton(_:)), for: .touchUpInside)
+    }
+    
+    @objc
+    private func didTapSaveButton(_ sender: UIButton) {
+        if let payment {
+            NotificationCenter.default.post(name: .paymentSaved, object: payment)
+        }
+        
+        navigationController?.popViewController(animated: true)
     }
 }

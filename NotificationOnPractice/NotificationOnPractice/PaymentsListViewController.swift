@@ -6,21 +6,7 @@
 //
 
 import UIKit
-
-struct Payment: Identifiable {
-    let id = UUID()
-    let name: String
-}
-
-extension Payment {
-    static func makeSampleData(number: Int) -> [Payment] {
-        var result: [Payment] = []
-        for _ in 0..<number {
-            result.append(Payment(name: "Payment N\(Int.random(in: 1...100))"))
-        }
-        return result
-    }
-}
+import Combine
 
 final class PaymentsListViewController: UIViewController {
     
@@ -41,14 +27,75 @@ final class PaymentsListViewController: UIViewController {
         return tableView
     }()
     
+    private var notificationObserver: Any?
+    
+    // NotificationCenter version
+    private var savedPayment: Payment?
+    
+    // Combine version
+//    @Published private var savedPayment: Payment?
+    
+    private var cancellableSet: Set<AnyCancellable> = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = "Payments"
-        navigationController?.navigationBar.prefersLargeTitles = true
-                
+        setupView()
         setupDataSource()
         setupTableView()
+        updateSnapshot()
+        
+        // Combine version
+//        NotificationCenter.default.publisher(for: .paymentSaved, object: nil)
+//            .compactMap { (notification) -> Payment?  in
+//                return notification.object as? Payment
+//            }
+//            .assign(to: \.savedPayment, on: self)
+//            .store(in: &cancellableSet)
+        
+        // Combine version without @Published
+        NotificationCenter.default.publisher(for: .paymentSaved, object: nil)
+            .compactMap { (notification) -> Payment?  in
+                return notification.object as? Payment
+            }
+            .sink { [weak self] payment in
+                guard let self else { return }
+                self.savedPayment = payment
+            }
+            .store(in: &cancellableSet)
+
+        // NotificationCenter version
+        notificationObserver = NotificationCenter.default.addObserver(forName: .paymentSaved, object: nil, queue: .main) { [weak self] notification in
+            guard let self else { return }
+            if let savedPayment = notification.userInfo?["savedPayment"] as? Payment {
+                self.savedPayment = savedPayment
+            }
+        }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if let savedPayment {
+            presentAlert(withTitle: "Payment is saved", message: "Payment \(savedPayment.name) is saved") { [unowned self] in
+                self.savedPayment = nil
+            }
+        }
+    }
+    
+    
+    deinit {
+        // NotificationCenter version
+        if let observer = notificationObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
+        
+        // Combine version
+        cancellableSet.removeAll()
+    }
+    
+    private func setupView() {
+        title = "Payments"
+        navigationController?.navigationBar.prefersLargeTitles = true
         
         view.addSubview(tableView)
         NSLayoutConstraint.activate([
@@ -57,8 +104,6 @@ final class PaymentsListViewController: UIViewController {
             tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
-        
-        updateSnapshot()
     }
     
     private func setupTableView() {
@@ -91,8 +136,12 @@ extension PaymentsListViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let cell = tableView.cellForRow(at: indexPath) else { return }
+        
         let paymentReceiptViewController = PaymentReceiptViewController()
-        paymentReceiptViewController.title = payments[indexPath.row].name
+        let payment = payments[indexPath.row]
+        
+        paymentReceiptViewController.title = payment.name
+        paymentReceiptViewController.payment = payment
         
         cell.setSelected(false, animated: true)
         navigationController?.pushViewController(paymentReceiptViewController, animated: true)

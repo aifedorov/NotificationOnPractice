@@ -13,6 +13,9 @@
 		F8438A962ADBFB1100B6FDF0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F8438A952ADBFB1100B6FDF0 /* Assets.xcassets */; };
 		F8438A992ADBFB1100B6FDF0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F8438A972ADBFB1100B6FDF0 /* LaunchScreen.storyboard */; };
 		F8438AA12ADC038C00B6FDF0 /* PaymentReceiptViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8438AA02ADC038C00B6FDF0 /* PaymentReceiptViewController.swift */; };
+		F8438AA32ADC075400B6FDF0 /* Payment.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8438AA22ADC075400B6FDF0 /* Payment.swift */; };
+		F8438AA52ADC077A00B6FDF0 /* NotificationName+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8438AA42ADC077A00B6FDF0 /* NotificationName+Ext.swift */; };
+		F8438AA72ADC1DA800B6FDF0 /* UIViewController+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8438AA62ADC1DA800B6FDF0 /* UIViewController+Ext.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +27,9 @@
 		F8438A982ADBFB1100B6FDF0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F8438A9A2ADBFB1100B6FDF0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F8438AA02ADC038C00B6FDF0 /* PaymentReceiptViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentReceiptViewController.swift; sourceTree = "<group>"; };
+		F8438AA22ADC075400B6FDF0 /* Payment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Payment.swift; sourceTree = "<group>"; };
+		F8438AA42ADC077A00B6FDF0 /* NotificationName+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NotificationName+Ext.swift"; sourceTree = "<group>"; };
+		F8438AA62ADC1DA800B6FDF0 /* UIViewController+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Ext.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,10 +65,13 @@
 				F8438A8C2ADBFB1000B6FDF0 /* AppDelegate.swift */,
 				F8438A8E2ADBFB1000B6FDF0 /* SceneDelegate.swift */,
 				F8438A902ADBFB1000B6FDF0 /* PaymentsListViewController.swift */,
+				F8438AA02ADC038C00B6FDF0 /* PaymentReceiptViewController.swift */,
+				F8438AA22ADC075400B6FDF0 /* Payment.swift */,
+				F8438AA42ADC077A00B6FDF0 /* NotificationName+Ext.swift */,
+				F8438AA62ADC1DA800B6FDF0 /* UIViewController+Ext.swift */,
 				F8438A952ADBFB1100B6FDF0 /* Assets.xcassets */,
 				F8438A972ADBFB1100B6FDF0 /* LaunchScreen.storyboard */,
 				F8438A9A2ADBFB1100B6FDF0 /* Info.plist */,
-				F8438AA02ADC038C00B6FDF0 /* PaymentReceiptViewController.swift */,
 			);
 			path = NotificationOnPractice;
 			sourceTree = "<group>";
@@ -139,8 +148,11 @@
 			files = (
 				F8438A912ADBFB1000B6FDF0 /* PaymentsListViewController.swift in Sources */,
 				F8438A8D2ADBFB1000B6FDF0 /* AppDelegate.swift in Sources */,
+				F8438AA72ADC1DA800B6FDF0 /* UIViewController+Ext.swift in Sources */,
 				F8438AA12ADC038C00B6FDF0 /* PaymentReceiptViewController.swift in Sources */,
+				F8438AA52ADC077A00B6FDF0 /* NotificationName+Ext.swift in Sources */,
 				F8438A8F2ADBFB1000B6FDF0 /* SceneDelegate.swift in Sources */,
+				F8438AA32ADC075400B6FDF0 /* Payment.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
